@@ -2,8 +2,8 @@
 
 set -e
 
-GO_VERSION="1.22.3"
-GO_DOWNLOAD_URL="https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz"
+GO_VERSION=$(curl -s https://go.dev/dl/?mode=json | grep -oP '"version":\s*"\Kgo[0-9.]+' | head -n 1)
+GO_DOWNLOAD_URL="https://go.dev/dl/${GO_VERSION}.linux-amd64.tar.gz"
 GO_INSTALL_DIR="/usr/local"
 PROFILE_PATH="/etc/profile.d/golang.sh"
 GOBIN="/usr/local/bin"
@@ -41,6 +41,7 @@ TOOLS=(
     "github.com/tomnomnom/assetfinder"
     "github.com/tomnomnom/waybackurls"
     "github.com/tomnomnom/httprobe"
+    "github.com/ffuf/ffuf"
 )
 
 for TOOL in "${TOOLS[@]}"; do
