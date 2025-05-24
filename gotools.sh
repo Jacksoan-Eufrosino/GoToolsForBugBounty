@@ -84,9 +84,9 @@ instalar_ferramentas(){
 }
 
 desinstalar_ferramentas(){
-  echo -e "⚠️${RED}Isso irá remover o GO e todas as ferramentas instaladas.${RESET}"
+  echo -e "⚠️ ${RED}Isso irá remover o GO e todas as ferramentas instaladas.${RESET}"
   echo -e "${RED}Você quer continuar? [y/N]: ${RESET}"
-  read -p confirm
+  read confirm
   if [[ "$confirm" != "y" && "$confirm" != "Y" ]]; then
       echo -e "❌ ${YELLOW}Desinstalação cancelada.${RESET}"
       exit 1
@@ -137,7 +137,8 @@ desinstalar_ferramentas(){
   echo -e "✅ ${GREEN}Desinstalaçao completa.${RESET}"
 }
 
-read -p "Digite i para instalar ou d para desisntalar as ferramentas: " escolha
+echo -e "${GREEN}Digite i para instalar ou d para desisntalar as ferramentas: ${RESET}"
+read escolha
 
 if [[ "$escolha" == "i" || "$escolha" == "I" ]]; then
   instalar_ferramentas
