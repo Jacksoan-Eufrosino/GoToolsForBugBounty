@@ -84,7 +84,7 @@ instalar_ferramentas(){
 }
 
 desinstalar_ferramentas(){
-  echo -e "⚠️ ${RED}Isso irá remover o GO e todas as ferramentas instaladas.${RESET}"
+  echo -e "${RED}Isso irá remover o GO e todas as ferramentas instaladas.${RESET}"
   echo -e "${RED}Você quer continuar? [y/N]: ${RESET}"
   read confirm
   if [[ "$confirm" != "y" && "$confirm" != "Y" ]]; then
@@ -128,7 +128,8 @@ desinstalar_ferramentas(){
     echo -e "🧹${GREEN} GO removido de ~/.bashrc${RESET}"
   fi
 
-  read -p "${YELLOW}Voce quer deletar seu workspace e cache do GO (~/go and ~/.cache/go-build)? [y/N]: ${RESET}" clean_cache
+  echo -e "${YELLOW}Voce quer deletar seu workspace e cache do GO (~/go and ~/.cache/go-build)? [y/N]: ${RESET}"
+  read clean_cache
   if [[ "$clean_cache" == "y" || "$clean_cache" == "Y" ]]; then
     rm -rf ~/go ~/.cache/go-build
     echo -e "🧽${GREEN} Removidos ~/go e ~/.cache/go-build${RESET}"
