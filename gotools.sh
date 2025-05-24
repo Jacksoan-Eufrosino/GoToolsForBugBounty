@@ -49,7 +49,7 @@ BIN_DIRS=(
 instalar_ferramentas(){
   echo -e "🔍 ${YELLOW}Checando instalaçao do GO...${RESET}"
   if ! command -v go &> /dev/null; then
-      echo "⬇️ ${GREEN}Instalando GO ${GO_VERSION} do site oficial...${RESET}"
+      echo -e "⬇️ ${GREEN}Instalando GO ${GO_VERSION} do site oficial...${RESET}"
       wget -q $GO_DOWNLOAD_URL -O /tmp/go.tar.gz
       sudo rm -rf $GO_INSTALL_DIR/go
       sudo tar -C $GO_INSTALL_DIR -xzf /tmp/go.tar.gz
@@ -58,82 +58,83 @@ instalar_ferramentas(){
   else
       INSTALLED_VERSION=$(go version | awk '{print $3}')
       if [[ "$INSTALLED_VERSION" != "go${GO_VERSION}" ]]; then
-          echo "🔄 ${GREEN}Atualizando o GO para ${GO_VERSION}...${RESET}"
+          echo -e "🔄 ${GREEN}Atualizando o GO para ${GO_VERSION}...${RESET}"
           wget -q $GO_DOWNLOAD_URL -O /tmp/go.tar.gz
           sudo rm -rf $GO_INSTALL_DIR/go
           sudo tar -C $GO_INSTALL_DIR -xzf /tmp/go.tar.gz
           export PATH=$PATH:/usr/local/go/bin
       else
-          echo "✅ ${GREEN}GO já esta na versão mais atual (${GO_VERSION}).${RESET}"
+          echo -e "✅ ${GREEN}GO já esta na versão mais atual (${GO_VERSION}).${RESET}"
       fi
   fi
 
-  echo "📦 ${GREEN}Instalando dependencias...${RESET}"
+  echo -e "📦 ${GREEN}Instalando dependencias...${RESET}"
 
   sudo apt install build-essential -y
   sudo apt install libpcap-dev -y
 
-  echo "📦 ${GREEN}Instalando ferramentas...${RESET}"
+  echo -e "📦 ${GREEN}Instalando ferramentas...${RESET}"
 
   for TOOL in "${TOOLS[@]}"; do
-      echo "🔧 ${GREEN}Instalando/Atualizando $(basename "$TOOL")...${RESET}"
+      echo -e "🔧 ${GREEN}Instalando/Atualizando $(basename "$TOOL")...${RESET}"
       GOBIN=$GOBIN go install "$TOOL@latest"
   done
 
-  echo "✅ ${GREEN}Todas as ferramentas foram instaladas em $GOBIN${RESET}"
+  echo -e "✅ ${GREEN}Todas as ferramentas foram instaladas em $GOBIN${RESET}"
 }
 
 desinstalar_ferramentas(){
-  echo "⚠️  ${RED}Isso irá remover o GO e todas as ferramentas instaladas.${RESET}"
-  read -p "${RED}Você quer continuar? [y/N]: ${RESET}" confirm
+  echo -e "⚠️${RED}Isso irá remover o GO e todas as ferramentas instaladas.${RESET}"
+  echo -e "${RED}Você quer continuar? [y/N]: ${RESET}"
+  read -p confirm
   if [[ "$confirm" != "y" && "$confirm" != "Y" ]]; then
-      echo "❌ ${YELLOW}Desinstalação cancelada.${RESET}"
+      echo -e "❌ ${YELLOW}Desinstalação cancelada.${RESET}"
       exit 1
   fi
 
 
-  echo "🔍 ${YELLOW}Procurando ferramentas a serem desinstaladas.${RESET}"
+  echo -e "🔍 ${YELLOW}Procurando ferramentas a serem desinstaladas.${RESET}"
   for tool in "${TOOLS[@]}"; do
     tool_name=$(basename "$tool")  # <-- extrai só o executável
     FOUND=0
     for dir in "${BIN_DIRS[@]}"; do
       if [[ -f "$dir/$tool_name" ]]; then
-        echo "${YELLOW}Desinstalando $tool_name de $dir ${RESET}"
+        echo -e "${YELLOW}Desinstalando $tool_name de $dir ${RESET}"
         sudo rm -f "$dir/$tool_name"
         FOUND=1
       fi
     done
     if [[ $FOUND -eq 0 ]]; then
-      echo "ℹ️ ${YELLOW} $tool_name nao encontrada nos paths padrao ${RESET}"
+      echo -e "ℹ️ ${YELLOW} $tool_name nao encontrada nos paths padrao ${RESET}"
     fi
   done
 
 
   # Remove Go de /usr/local/go
   if [[ -d "/usr/local/go" ]]; then
-    echo "${YELLOW}Removendo GO de /usr/local/go${RESET}"
+    echo -e "${YELLOW}Removendo GO de /usr/local/go${RESET}"
     sudo rm -rf /usr/local/go
   else
-    echo "ℹ️ ${RED}GO nao encontrado em /usr/local/go${RESET}"
+    echo -e "ℹ️ ${RED}GO nao encontrado em /usr/local/go${RESET}"
   fi
 
   # Remove Go path de ~/.profile or ~/.bashrc
   if grep -q "export PATH=\$PATH:/usr/local/go/bin" ~/.profile; then
     sed -i '/export PATH=\$PATH:\/usr\/local\/go\/bin/d' ~/.profile
-    echo "🧹${GREEN} GO removido de ~/.profile${RESET}"
+    echo -e "🧹${GREEN} GO removido de ~/.profile${RESET}"
   fi
   if grep -q "export PATH=\$PATH:/usr/local/go/bin" ~/.bashrc; then
     sed -i '/export PATH=\$PATH:\/usr\/local\/go\/bin/d' ~/.bashrc
-    echo "🧹${GREEN} GO removido de ~/.bashrc${RESET}"
+    echo -e "🧹${GREEN} GO removido de ~/.bashrc${RESET}"
   fi
 
   read -p "${YELLOW}Voce quer deletar seu workspace e cache do GO (~/go and ~/.cache/go-build)? [y/N]: ${RESET}" clean_cache
   if [[ "$clean_cache" == "y" || "$clean_cache" == "Y" ]]; then
     rm -rf ~/go ~/.cache/go-build
-    echo "🧽${GREEN} Removidos ~/go e ~/.cache/go-build${RESET}"
+    echo -e "🧽${GREEN} Removidos ~/go e ~/.cache/go-build${RESET}"
   fi
 
-  echo "✅ ${GREEN}Desinstalaçao completa.${RESET}"
+  echo -e "✅ ${GREEN}Desinstalaçao completa.${RESET}"
 }
 
 read -p "Digite i para instalar ou d para desisntalar as ferramentas: " escolha
