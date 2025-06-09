@@ -31,6 +31,7 @@ TOOLS=(
     "github.com/tomnomnom/gf"
     "github.com/tomnomnom/anew"
     "github.com/ffuf/ffuf"
+    "github.com/hahwul/dalfox/v2"
   )
 
 
